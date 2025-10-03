@@ -1,0 +1,9 @@
+# Ignore heavy assets not needed for the static build output
+Introduction to AI/
+Introduction to AI/**
+
+# VCS and environment
+.git/
+.env*
+node_modules/
+
