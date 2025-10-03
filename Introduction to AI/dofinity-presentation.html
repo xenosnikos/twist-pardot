@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dofinity - Strategic Technical Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #1a1a1a;
+            overflow-x: hidden;
+            background: #809df1;
+            font-weight: 400;
+        }
+
+        .presentation-container {
+            max-width: 100vw;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            min-height: 100vh;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            transition: all 0.6s ease-in-out;
+            position: relative;
+            background: #809df1;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-content {
+            max-width: 1200px;
+            text-align: center;
+            color: #1a1a1a;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #1a1a1a;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: #4a4a4a;
+            font-weight: 400;
+        }
+
+        .phase-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .phase-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .phase-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            display: block;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .deliverables-list {
+            text-align: left;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .deliverables-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .deliverables-list li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+            font-size: 1.1rem;
+        }
+
+        .deliverables-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #1a1a1a;
+            font-weight: bold;
+            font-size: 1.2rem;
+            top: 0.1rem;
+        }
+
+        .cta-button {
+            background: #1a1a1a;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin: 0.5rem;
+            text-decoration: none;
+            display: inline-block;
+            letter-spacing: -0.01em;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 26, 26, 0.3);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .nav-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot.active {
+            background: #1a1a1a;
+            transform: scale(1.3);
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(26, 26, 26, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            z-index: 1000;
+            font-size: 0.9rem;
+        }
+
+        .logo-container {
+            display: none;
+        }
+
+        .arrow-nav {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(26, 26, 26, 0.8);
+            color: white;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 1000;
+            transition: all 0.2s ease;
+            font-weight: 600;
+        }
+
+        .arrow-nav:hover {
+            background: #1a1a1a;
+            transform: translateY(-50%) translateX(2px);
+        }
+
+        .arrow-left {
+            left: 30px;
+        }
+
+        .arrow-right {
+            right: 30px;
+        }
+
+        .methodology-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 3rem 0;
+            position: relative;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .timeline-step {
+            background: white;
+            padding: 0;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            border: 3px solid #1a1a1a;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-connector {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: #1a1a1a;
+            z-index: 1;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+            to { text-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 1.3rem;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            border-left: 4px solid #1a1a1a;
+            margin: 2rem 0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            .phase-container { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .methodology-timeline { flex-direction: column; gap: 1rem; }
+            .timeline-connector { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="logo-container">DOFINITY</div>
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">12</span>
+        </div>
+
+        <button class="arrow-nav arrow-left" onclick="previousSlide()">‹</button>
+        <button class="arrow-nav arrow-right" onclick="nextSlide()">›</button>
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="slide-content">
+                <h1>Unlock Hidden Value Through Strategic Technical Analysis</h1>
+                <p class="subtitle">The Dofinity Advantage: Human Intelligence Before Artificial Intelligence</p>
+                <p style="font-size: 1.2rem; margin-top: 2rem;">Our expert Business Analysts conduct comprehensive organizational assessments to identify transformative opportunities that others miss.</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Success Story -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Proven Results</h2>
+                <div class="stat-card" style="max-width: 600px; margin: 2rem auto;">
+                    <span class="stat-number">$78.5M+</span>
+                    <p style="font-size: 1.3rem;">Value Creation for XLMedia</p>
+                    <p style="margin-top: 1rem;">Through strategic technical flexibility</p>
+                </div>
+                <p style="font-size: 1.2rem; margin-top: 2rem;">Just as we enabled XLMedia's transformation, we help organizations discover untapped potential.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Discovery Methodology Overview -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Our Discovery Methodology</h2>
+                <div class="methodology-timeline">
+                    <div class="timeline-connector"></div>
+                    <div class="timeline-step">1</div>
+                    <div class="timeline-step">2</div>
+                    <div class="timeline-step">3</div>
+                </div>
+                <div class="phase-container">
+                    <div class="phase-card">
+                        <h3>Phase 1: Deep-Dive Interviews</h3>
+                        <p>Weeks 1-2</p>
+                    </div>
+                    <div class="phase-card">
+                        <h3>Phase 2: Technical Stack Audit</h3>
+                        <p>Weeks 2-3</p>
+                    </div>
+                    <div class="phase-card">
+                        <h3>Phase 3: Opportunity Identification</h3>
+                        <p>Week 4</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Phase 1 Details -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Phase 1: Deep-Dive Interviews</h2>
+                <p class="subtitle">Weeks 1-2</p>
+                <div class="deliverables-list">
+                    <ul>
+                        <li><strong>C-Suite Strategic Alignment</strong> — Understanding business objectives and pain points</li>
+                        <li><strong>Department Head Workshops</strong> — Mapping operational workflows and bottlenecks</li>
+                        <li><strong>Individual Contributor Sessions</strong> — Uncovering ground-level inefficiencies</li>
+                        <li><strong>Cross-Functional Touchpoints</strong> — Identifying collaboration gaps</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Phase 2 Details -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Phase 2: Technical Stack Audit</h2>
+                <p class="subtitle">Weeks 2-3</p>
+                <div class="deliverables-list">
+                    <ul>
+                        <li><strong>System Architecture Review</strong> — Documenting current technology landscape</li>
+                        <li><strong>Data Flow Analysis</strong> — Tracing information pathways and redundancies</li>
+                        <li><strong>Integration Assessment</strong> — Finding disconnected systems and data silos</li>
+                        <li><strong>Cost-Benefit Mapping</strong> — Analyzing ROI of existing solutions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Phase 3 Details -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Phase 3: Opportunity Identification</h2>
+                <p class="subtitle">Week 4</p>
+                <div class="phase-container">
+                    <div class="phase-card">
+                        <h3>AI Implementation Targets</h3>
+                        <div class="deliverables-list" style="margin-top: 1rem;">
+                            <ul>
+                                <li>Repetitive task automation potential</li>
+                                <li>Predictive analytics opportunities</li>
+                                <li>Natural language processing applications</li>
+                                <li>Computer vision use cases</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="phase-card">
+                        <h3>Technical Consolidation</h3>
+                        <div class="deliverables-list" style="margin-top: 1rem;">
+                            <ul>
+                                <li>Redundant system elimination</li>
+                                <li>Platform migration opportunities</li>
+                                <li>License optimization</li>
+                                <li>Cloud cost reduction strategies</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="phase-card">
+                        <h3>Horizontal Bridging</h3>
+                        <div class="deliverables-list" style="margin-top: 1rem;">
+                            <ul>
+                                <li>Cross-department data sharing</li>
+                                <li>Unified dashboard creation</li>
+                                <li>API integration possibilities</li>
+                                <li>Single source of truth initiatives</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Deliverables -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Comprehensive Discovery Report</h2>
+                <div class="deliverables-list">
+                    <ul>
+                        <li><strong>Executive Summary</strong> — Priority recommendations with projected ROI</li>
+                        <li><strong>Department-Specific Findings</strong> — Tailored improvements per business unit</li>
+                        <li><strong>Technology Roadmap</strong> — Phased implementation plan with quick wins</li>
+                        <li><strong>Risk Assessment</strong> — Change management considerations</li>
+                        <li><strong>Cost-Benefit Analysis</strong> — Detailed financial projections</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Expected Outcomes -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Expected Outcomes</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Typical Range</th>
+                                <th>Based On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Cost Reduction</strong></td>
+                                <td><span style="color: #00FF7F; font-weight: bold;">15-40%</span></td>
+                                <td>Operational expenses</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Efficiency Gains</strong></td>
+                                <td><span style="color: #00FF7F; font-weight: bold;">20-50%</span></td>
+                                <td>Process optimization</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Hidden Value Discovery</strong></td>
+                                <td><span style="color: #FFD700; font-weight: bold;">$1-5M+</span></td>
+                                <td>Unutilized assets/data</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Time-to-Value</strong></td>
+                                <td><span style="color: #87CEEB; font-weight: bold;">3-6 months</span></td>
+                                <td>First implementations</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Why Now -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Why This Matters Now</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>AI Revolution Window</h3>
+                        <p>Early adopters gain competitive advantages</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Economic Pressure</h3>
+                        <p>Do more with existing resources</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Technical Debt</h3>
+                        <p>Legacy systems compound costs annually</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Talent Optimization</h3>
+                        <p>Redirect human expertise to high-value work</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Investment Model -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Investment Model</h2>
+                <div class="phase-container">
+                    <div class="phase-card" style="text-align: center;">
+                        <h3>Discovery Program</h3>
+                        <div class="stat-number">$45K - $85K</div>
+                        <ul style="text-align: left; margin-top: 1rem;">
+                            <li>4-week intensive assessment</li>
+                            <li>2-3 senior analysts</li>
+                            <li>Comprehensive documentation</li>
+                            <li>Executive presentation</li>
+                        </ul>
+                    </div>
+                    <div class="phase-card" style="background: linear-gradient(135deg, rgba(0,255,127,0.2) 0%, rgba(0,255,127,0.1) 100%);">
+                        <h3 style="color: #00FF7F;">ROI Guarantee</h3>
+                        <p style="font-size: 1.1rem; margin-top: 1rem;">If we don't identify savings opportunities worth at least <strong>3× the assessment cost</strong>, the engagement is free.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Case Study -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Case Study Preview</h2>
+                <div class="quote">
+                    "Dofinity's analysts discovered <strong style="color: #FFD700;">$2.3M in annual savings</strong> through consolidating our martech stack and implementing targeted AI automations. What surprised us most were the opportunities hiding in plain sight — disconnected systems our teams had simply accepted as normal."
+                    <br><br>
+                    <strong>— CTO, Global Media Company</strong>
+                </div>
+                <div class="stats-grid" style="margin-top: 2rem;">
+                    <div class="stat-card">
+                        <span class="stat-number">$2.3M</span>
+                        <p>Annual Savings Discovered</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">50+</span>
+                        <p>Enterprise Transformations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Call to Action -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Ready to Unlock Your Hidden Value?</h2>
+                <p class="subtitle">Schedule a 30-minute discovery call to:</p>
+                <div class="deliverables-list" style="max-width: 600px; margin: 2rem auto;">
+                    <ul>
+                        <li>Discuss your specific challenges</li>
+                        <li>Review our assessment methodology</li>
+                        <li>Identify quick-win opportunities</li>
+                        <li>Define success metrics</li>
+                    </ul>
+                </div>
+                <div style="margin-top: 3rem;">
+                    <a href="mailto:strategy@dofinity.com" class="cta-button">Start Your Discovery</a>
+                    <a href="http://www.dofinity.com/ai-discovery" class="cta-button">Learn More</a>
+                </div>
+                <div style="margin-top: 2rem; opacity: 0.8;">
+                    <p><strong>Contact:</strong> strategy@dofinity.com</p>
+                    <p><strong>Website:</strong> www.dofinity.com/ai-discovery</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation" id="navigation">
+            <!-- Navigation dots will be generated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        // Generate navigation dots
+        function generateNavigation() {
+            const navigation = document.getElementById('navigation');
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'nav-dot';
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(i));
+                navigation.appendChild(dot);
+            }
+        }
+
+        // Update slide counter
+        function updateSlideCounter() {
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            document.getElementById('total-slides').textContent = totalSlides;
+        }
+
+        // Go to specific slide
+        function goToSlide(slideIndex) {
+            slides[currentSlide].classList.remove('active');
+            document.querySelectorAll('.nav-dot')[currentSlide].classList.remove('active');
+            
+            currentSlide = slideIndex;
+            
+            slides[currentSlide].classList.add('active');
+            document.querySelectorAll('.nav-dot')[currentSlide].classList.add('active');
+            updateSlideCounter();
+        }
+
+        // Next slide
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                goToSlide(currentSlide + 1);
+            }
+        }
+
+        // Previous slide
+        function previousSlide() {
+            if (currentSlide > 0) {
+                goToSlide(currentSlide - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            }
+        });
+
+        // Auto-advance slides (optional)
+        let autoAdvance = false;
+        function toggleAutoAdvance() {
+            autoAdvance = !autoAdvance;
+            if (autoAdvance) {
+                setInterval(() => {
+                    if (autoAdvance) {
+                        if (currentSlide < totalSlides - 1) {
+                            nextSlide();
+                        } else {
+                            goToSlide(0);
+                        }
+                    }
+                }, 10000); // 10 seconds per slide
+            }
+        }
+
+        // Touch/swipe support for mobile
+        let startX = 0;
+        let endX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            endX = e.changedTouches[0].clientX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = startX - endX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide(); // Swipe left - go to next slide
+                } else {
+                    previousSlide(); // Swipe right - go to previous slide
+                }
+            }
+        }
+
+        // Initialize presentation
+        generateNavigation();
+        updateSlideCounter();
+
+        // Add fade-in animations to elements as they become visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in-up');
+                }
+            });
+        });
+
+        document.querySelectorAll('.phase-card, .stat-card, .deliverables-list li').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add click handlers for better UX
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('cta-button')) {
+                // Add click animation
+                e.target.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    e.target.style.transform = '';
+                }, 150);
+            }
+        });
+
+        // Preload images for better performance
+        function preloadImages() {
+            const imageUrls = [
+                './ppt/media/image2.png'
+                // Add other image URLs as needed
+            ];
+            
+            imageUrls.forEach(url => {
+                const img = new Image();
+                img.src = url;
+            });
+        }
+
+        preloadImages();
+
+        // Add presentation mode toggle
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // F key for fullscreen
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'f' || e.key === 'F') {
+                e.preventDefault();
+                toggleFullscreen();
+            }
+        });
+
+        console.log('Dofinity Presentation loaded successfully! Use arrow keys or click to navigate.');
+        console.log('Press F for fullscreen mode.');
+    </script>
+</body>
+</html>
