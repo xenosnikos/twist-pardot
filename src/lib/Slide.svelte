@@ -2,6 +2,9 @@
   export let title: string;
   export let hero = false;
   export let kicker: string | undefined = undefined;
+  // Company logo for hero slide
+  // Bundled via Vite so it's emitted to dist
+  import logoUrl from '../../Introduction to AI/ppt/media/image8.png?url';
 </script>
 
 <section class="slide">
@@ -10,6 +13,7 @@
       <div class="card" style="position:relative; overflow:hidden;">
         <div class="hero-bg pattern-brand" aria-hidden="true"></div>
         <div style="position:relative; padding: 40px 32px; text-align:center;">
+          <img src={logoUrl} alt="Company Logo" style="height: 56px; object-fit: contain; margin-bottom: 16px;" />
           <h1>{title}</h1>
           {#if kicker}
             <p style="color: var(--muted); font-weight:600">{kicker}</p>

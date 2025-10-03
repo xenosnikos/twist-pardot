@@ -257,10 +257,10 @@
       <button class="dot" aria-label={s.title} aria-current={idx-1===i && childIdx===-1} on:click={() => { idx=i+1; childIdx=-1; updateHash(); }}></button>
     {/each}
   </div>
-  {#if idx>0 && siblings[idx-1] && sectionChildren(siblings[idx-1]).length && (childIdx>=0 || !hasContent(siblings[idx-1]))}
+  {#if idx>0 && siblings[idx-1] && sectionChildren(siblings[idx-1]).length && childIdx>=0}
     <div class="nav-dots" role="tablist" aria-label="Section details" style="bottom: 52px;">
       {#each sectionChildren(siblings[idx-1]) as c, ci}
-        <button class="dot" aria-label={c.title} aria-current={childIdx===ci || (childIdx===-1 && !hasContent(siblings[idx-1]) && ci===0)} on:click={() => { childIdx=ci; updateHash(); }}></button>
+        <button class="dot" aria-label={c.title} aria-current={childIdx===ci} on:click={() => { childIdx=ci; updateHash(); }}></button>
       {/each}
     </div>
   {/if}
