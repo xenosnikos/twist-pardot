@@ -1,7 +1,7 @@
 import { mkdirSync, copyFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
-const src = resolve(process.cwd(), 'Introduction to AI/ppt/media/image8.png');
+const src = resolve(process.cwd(), 'logo.png');
 const dest = resolve(process.cwd(), 'public/brand/logo.png');
 
 try {
@@ -11,4 +11,3 @@ try {
 } catch (e) {
   console.warn('Logo copy skipped or failed:', e?.message || e);
 }
-
