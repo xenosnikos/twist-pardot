@@ -2,9 +2,8 @@
   export let title: string;
   export let hero = false;
   export let kicker: string | undefined = undefined;
-  // Company logo for hero slide
-  // Bundled via Vite so it's emitted to dist
-  import logoUrl from '../../Introduction to AI/ppt/media/image8.png?url';
+  // Company logo for hero slide, copied to public/brand/logo.png at build time
+  const logoUrl = '/brand/logo.png';
 </script>
 
 <section class="slide">
